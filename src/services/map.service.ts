@@ -1,4 +1,4 @@
-import { Inject, inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import type * as L from 'leaflet';
 import { debounceTime, Observable, of, Subject, switchMap } from 'rxjs';
@@ -62,6 +62,7 @@ export class MapService {
   private markersLayer?: L.LayerGroup;
   private markerClusterGroup?: MarkerClusterGroupInterface;
   private weatherService = inject(WeatherService);
+  private readonly platformId = inject(PLATFORM_ID);
 
   // Set to track location IDs that already have markers
   private markerLocationIds = new Set<string>();
@@ -88,7 +89,7 @@ export class MapService {
   // Track the current zoom level to detect zoom changes
   private currentZoomLevel = 6;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: object) {
+  constructor() {
     // Don't load Leaflet in the constructor - wait for an explicit request
 
     // Set up debouncing for map movement
