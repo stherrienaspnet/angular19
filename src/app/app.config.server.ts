@@ -1,5 +1,5 @@
+import { provideServerRendering } from '@angular/ssr';
 import { mergeApplicationConfig, ApplicationConfig } from '@angular/core';
-import { provideServerRendering } from '@angular/platform-server';
 import { appConfig } from './app.config';
 import { UNIVERSAL_PROVIDERS } from '@ng-web-apis/universal';
 import { TranslateLoader } from '@ngx-translate/core';
@@ -14,7 +14,7 @@ interface TranslationData {
 
 // Custom TranslateLoader for SSR that loads translations from filesystem
 export class TranslateServerLoader implements TranslateLoader {
-  constructor(private prefix: string = 'i18n', private suffix: string = '.json') {}
+  constructor(private prefix = 'i18n', private suffix = '.json') {}
 
   getTranslation(lang: string): Observable<TranslationData> {
     try {

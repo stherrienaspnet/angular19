@@ -7,7 +7,6 @@ import {
   PLATFORM_ID,
   signal,
   WritableSignal,
-  AfterViewInit,
   ChangeDetectorRef,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -35,7 +34,7 @@ interface ScrollEventTarget {
     class: 'flex grow',
   },
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent {
   @ViewChild('buttons')
   protected readonly button?: ElementRef<HTMLElement>;
   protected readonly stops = ['112px'] as const;
@@ -60,18 +59,11 @@ export class HomeComponent implements AfterViewInit {
   private readonly globalService = inject(GlobalServiceService);
   private readonly mapService = inject(MapService);
 
-  ngAfterViewInit(): void {
-    // Only proceed in the browser environment
-    if (!isPlatformBrowser(this.platformId)) {
-      console.log('Not in browser environment, skipping map initialization');
-      return;
+  @ViewChild('mapContainer')
+  set mapContainer(container: ElementRef<HTMLElement> | undefined) {
+    if (container && isPlatformBrowser(this.platformId)) {
+      queueMicrotask(() => void this.initializeMap());
     }
-
-    // Use setTimeout to ensure DOM is fully rendered
-    setTimeout(() => {
-      // Initialize the map
-      this.initializeMap();
-    }, 0);
   }
 
   private async initializeMap(retryCount = 0): Promise<void> {

@@ -1,6 +1,6 @@
 import {
   ApplicationConfig,
-  provideExperimentalZonelessChangeDetection,
+  provideZonelessChangeDetection,
 } from '@angular/core';
 import { HttpClient, provideHttpClient, withFetch } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
@@ -25,7 +25,7 @@ const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
-    provideExperimentalZonelessChangeDetection(),
+    provideZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(withFetch()),
     provideClientHydration(withEventReplay()),

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TuiAvatar } from '@taiga-ui/kit';
@@ -16,7 +17,9 @@ import { GlobalServiceService } from '../../services';
   },
 })
 export class ProfileComponent {
-  constructor(protected readonly globalService: GlobalServiceService) {
+  protected readonly globalService = inject(GlobalServiceService);
+
+  constructor() {
     // Set the header title when this component is loaded
     this.globalService.headerTitle.set('Profile');
   }
