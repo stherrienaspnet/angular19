@@ -1,6 +1,6 @@
 # Angular19
 Base project for Web Applications:
-- [Angular 19](https://github.com/angular/angular-cli)
+- [Angular 21](https://github.com/angular/angular-cli)
   - SSR
   - Zoneless
   - OnPush and Standalone components
@@ -14,6 +14,9 @@ With love, by Gabri Mejía ❤
 [Live DEMO](https://angular-app-template.netlify.app/home) 🚀
 
 ## Development server
+
+Use npm and a supported Node.js version: `^20.19.0`, `^22.12.0`, or `^24.0.0`.
+Install dependencies with `npm ci`.
 
 To start a local development server, run:
 
@@ -64,7 +67,8 @@ npm test
 ```
 
 For a single run with a coverage report, use `npm run test:ci`. The HTML report
-is written to `coverage/`.
+is written to `coverage/`. The initial coverage thresholds prevent regressions;
+they are a starting point, not the long-term 80% target.
 
 ## Running end-to-end tests
 
@@ -82,10 +86,12 @@ For more information on using the Angular CLI, including detailed command refere
 
 ## Notes on Server-Side Rendering (SSR)
 
-When running the application with SSR, you may see the following message in the console:
+Map initialization is skipped during server-side rendering because Leaflet
+requires browser APIs. It starts after the deferred map element is rendered
+in the browser.
 
-```
-Not in browser environment, skipping map initialization
-```
-
-This is expected behavior and not an error. The map initialization is intentionally skipped during server-side rendering because map libraries like Leaflet require browser-specific APIs that are not available in the server environment. The map will be properly initialized when the application runs in the browser.
+After `npm run build`, run `npm run serve:ssr:angular19` to start the production
+server. Localhost is allowed by default. When hosting the SSR server elsewhere,
+configure trusted hostnames with `NG_ALLOWED_HOSTS` as described in the
+[Angular SSR security documentation](https://angular.dev/best-practices/security#preventing-server-side-request-forgery-ssrf).
+Run `npm run test:ssr` after the build to smoke-test prerendered pages and translations.

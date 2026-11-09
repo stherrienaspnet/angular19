@@ -3,6 +3,10 @@ import angular from '@analogjs/vite-plugin-angular';
 
 export default defineConfig({
   plugins: [angular()],
+  optimizeDeps: {
+    noDiscovery: true,
+    entries: ['src/**/*.spec.ts'],
+  },
   test: {
     globals: true,
     setupFiles: ['src/test-setup.ts'],
@@ -12,6 +16,12 @@ export default defineConfig({
       reporter: ['text', 'html', 'lcov'],
       include: ['src/**/*.ts'],
       exclude: ['src/**/*.spec.ts', 'src/test-setup.ts', 'src/main*.ts', 'src/server.ts'],
+      thresholds: {
+        lines: 33,
+        statements: 34,
+        branches: 24,
+        functions: 45,
+      },
     },
   },
 });

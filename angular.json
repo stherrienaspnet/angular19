@@ -7,12 +7,8 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "skipTests": true,
           "changeDetection": "OnPush",
           "inlineStyle": true
-        },
-        "@schematics/angular:service": {
-          "skipTests": true
         }
       },
       "root": "",
@@ -23,6 +19,9 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/angular19",
+            "security": {
+              "allowedHosts": ["localhost", "127.0.0.1"]
+            },
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [],
@@ -46,7 +45,7 @@
             ],
             "scripts": [],
             "server": "src/main.server.ts",
-            "prerender": true,
+            "outputMode": "server",
             "ssr": {
               "entry": "src/server.ts"
             }
