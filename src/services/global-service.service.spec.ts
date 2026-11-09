@@ -46,4 +46,28 @@ describe('GlobalServiceService', () => {
     theme.fn?.(theme);
     expect(service.selectedTheme()).toBe('light');
   });
+
+  it('logs the entries without a dedicated action', () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    const service = TestBed.inject(GlobalServiceService);
+    const entries = [
+      ...Object.values(service.drawer()).flat(),
+      service.settings()['account'][1],
+    ];
+    for (const entry of entries) {
+      entry.fn?.(entry);
+    }
+    expect(log).toHaveBeenCalledTimes(entries.length);
+    expect(log).toHaveBeenCalledWith('Map');
+    log.mockRestore();
+  });
+
+  it('shows the icon of the selected theme and language', () => {
+    const service = TestBed.inject(GlobalServiceService);
+    expect(service.settings()['preferences'][1].icon).toBe('@tui.moon');
+    service.selectedTheme.set('dark');
+    service.selectedLanguage.set('en');
+    expect(service.settings()['preferences'][1].icon).toBe('@tui.sun');
+    expect(service.settings()['preferences'][0].icon).toContain('gb');
+  });
 });

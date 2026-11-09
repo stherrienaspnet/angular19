@@ -1,5 +1,19 @@
 import { firstValueFrom } from 'rxjs';
-import { TranslateServerLoader } from './app.config.server';
+import {
+  config,
+  TranslateServerLoader,
+  translateServerLoaderFactory,
+} from './app.config.server';
+
+describe('server configuration', () => {
+  it('creates the filesystem translation loader', () => {
+    expect(translateServerLoaderFactory()).toBeInstanceOf(TranslateServerLoader);
+  });
+
+  it('extends the application providers with the server ones', () => {
+    expect(config.providers.length).toBeGreaterThan(0);
+  });
+});
 
 describe('TranslateServerLoader', () => {
   it('loads the Spanish translations from disk', async () => {

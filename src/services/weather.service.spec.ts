@@ -78,4 +78,59 @@ describe('WeatherService', () => {
       log.mockRestore();
     }
   });
+
+  it.each([
+    [0, 'Soleado', 'sun'],
+    [1, 'Parcialmente nublado', 'cloud-sun'],
+    [2, 'Parcialmente nublado', 'cloud-sun'],
+    [3, 'Nublado', 'cloud'],
+    [45, 'Niebla', 'foggy'],
+    [48, 'Niebla', 'foggy'],
+    [51, 'Llovizna', 'cloud-sun-rain'],
+    [53, 'Llovizna', 'cloud-sun-rain'],
+    [55, 'Llovizna', 'cloud-sun-rain'],
+    [61, 'Lluvia ligera', 'cloud-rain'],
+    [63, 'Lluvia ligera', 'cloud-rain'],
+    [65, 'Lluvia intensa', 'cloud-showers-heavy'],
+    [80, 'Lluvia intensa', 'cloud-showers-heavy'],
+    [81, 'Lluvia intensa', 'cloud-showers-heavy'],
+    [82, 'Lluvia intensa', 'cloud-showers-heavy'],
+    [71, 'Nieve', 'snowflake'],
+    [73, 'Nieve', 'snowflake'],
+    [75, 'Nieve', 'snowflake'],
+    [95, 'Tormenta', 'bolt'],
+    [96, 'Tormenta', 'bolt'],
+    [99, 'Tormenta', 'bolt'],
+    [1234, 'Desconocido', 'question'],
+  ])('describes the weather code %s as %s', async (code, description, icon) => {
+    const { service, http } = setup('browser');
+    const result = firstValueFrom(service.getWeatherForLocation(location));
+    http.expectOne((req) => req.url.startsWith('https://api.open-meteo.com/')).flush({
+      current_weather: { temperature: 1, windspeed: 1, weathercode: code, time: 't' },
+      hourly: { time: [], relativehumidity_2m: [], precipitation: [] },
+      daily: { time: [], weathercode: [], temperature_2m_max: [], temperature_2m_min: [] },
+    });
+    expect(await result).toMatchObject({ description, icon, forecast: [] });
+  });
+
+  it('reads the humidity and precipitation of the current hour', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    try {
+      vi.setSystemTime(new Date(2025, 0, 1, 12, 30));
+      const { service, http } = setup('browser');
+      const result = firstValueFrom(service.getWeatherForLocation(location));
+      http.expectOne((req) => req.url.startsWith('https://api.open-meteo.com/')).flush({
+        current_weather: { temperature: 1, windspeed: 3, weathercode: 0, time: 't' },
+        hourly: {
+          time: [new Date(2025, 0, 1, 11).toISOString(), new Date(2025, 0, 1, 12).toISOString()],
+          relativehumidity_2m: [10, 65],
+          precipitation: [0.1, 0.7],
+        },
+        daily: { time: [], weathercode: [], temperature_2m_max: [], temperature_2m_min: [] },
+      });
+      expect(await result).toMatchObject({ humidity: 65, precipitation: 0.7, windSpeed: 3 });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

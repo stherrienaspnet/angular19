@@ -59,10 +59,14 @@ export class LeafletLoader {
         module) as LeafletNamespace;
     }
     try {
-      await import('leaflet.markercluster');
+      await this.importClusterPlugin();
     } catch (error) {
       console.warn('Marker clustering is unavailable:', error);
     }
     return root.L;
+  }
+
+  private importClusterPlugin(): Promise<unknown> {
+    return import('leaflet.markercluster');
   }
 }
