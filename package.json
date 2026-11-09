@@ -13,7 +13,8 @@
     "serve:ssr:angular19": "node dist/angular19/server/server.mjs",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
-    "format": "prettier --write ./src"
+    "format": "prettier --write ./src",
+    "typecheck:spec": "tsc --noEmit -p tsconfig.spec.json"
   },
   "private": true,
   "engines": {
@@ -27,7 +28,6 @@
     "@angular/core": "^21.2.26",
     "@angular/forms": "^21.2.26",
     "@angular/platform-browser": "^21.2.26",
-    "@angular/platform-browser-dynamic": "^21.2.26",
     "@angular/platform-server": "^21.2.26",
     "@angular/router": "^21.2.26",
     "@angular/ssr": "^21.2.29",

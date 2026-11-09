@@ -58,6 +58,10 @@ ng build
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
+The initial bundle is about 900 kB raw (about 180 kB transferred), mostly Taiga UI.
+The budgets in `angular.json` are set just above that (warning at 950 kB, error at
+1.1 MB) so that growth is noticed.
+
 ## Running unit tests
 
 To execute unit tests with [Vitest](https://vitest.dev/), use:
@@ -67,8 +71,9 @@ npm test
 ```
 
 For a single run with a coverage report, use `npm run test:ci`. The HTML report
-is written to `coverage/`. The initial coverage thresholds prevent regressions;
-they are a starting point, not the long-term 80% target.
+is written to `coverage/`. The build fails below 80% of statements, branches,
+functions and lines. Entry points (`main*.ts`, `server.ts`) and test helpers are
+excluded from the coverage. `npm run typecheck:spec` type checks the test files.
 
 ## Running end-to-end tests
 
